@@ -38,7 +38,7 @@ class TimersDashboard extends React.Component {
   };
 
   deleteTimer = timerId => {
-    this.setState({timer:this.state.timers.filter(t => t.id !== timerId)}
+    this.setState({ timers: this.state.timers.filter(t => t.id !== timerId) });
   };
 
   updateTimer = attrs => {
@@ -136,10 +136,6 @@ class EditableTimer extends React.Component {
     editFormOpen: false,
   };
 
-  handleTrashClick = () => {
-    this.props.onTrashClick(this.props.id);
-  };
-
   handleEditClick = () => {
     this.openForm();
   };
@@ -181,7 +177,7 @@ class EditableTimer extends React.Component {
           elapsed={this.props.elapsed}
           runningSince={this.props.runningSince}
           onEditClick={this.handleEditClick}
-          onTrashClick={this.handleTrashClick}
+          onTrashClick={this.props.handleTrashClick}
         />
       );
     }
@@ -189,6 +185,10 @@ class EditableTimer extends React.Component {
 }
 
 class Timer extends React.Component {
+  handleTrashClick = () => {
+    this.props.onTrashClick(this.props.id);
+  };
+
   render() {
     const elapsedString = helpers.renderElapsedString(this.props.elapsed);
     return (
