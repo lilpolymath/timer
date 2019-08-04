@@ -67,6 +67,11 @@ class TimersDashboard extends React.Component {
           />
           <ToggleableTimerForm onFormSubmit={this.handleCreateFormSubmit} />
         </div>
+        <TimerActionButton
+          onStopClick={this.handleStopClick}
+          onStartClick={this.handleStartClick}
+          timerIsRunning={!!this.props.runningSince}
+        />
       </div>
     );
   }
@@ -185,12 +190,31 @@ class EditableTimer extends React.Component {
 }
 
 class Timer extends React.Component {
+  componentWillMount() {
+    this.forceUpdateInterval = setInterval(() => this.forceUpdate(), 50);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.forceUpdateInterval);
+  }
+
+  handleStartClick = () => {
+    this.props.onStartClick(this.props.id);
+  };
+
+  handleStopClick = () => {
+    this.props.onStopClick(this.props.id);
+  };
+
   handleTrashClick = () => {
     this.props.onTrashClick(this.props.id);
   };
 
   render() {
-    const elapsedString = helpers.renderElapsedString(this.props.elapsed);
+    const elapsedString = helpers.renderElapsedString(
+      this.props.elapsed,
+      this.props.runningSince
+    );
     return (
       <div className="ui centered card">
         <div className="content">
@@ -282,6 +306,30 @@ class TimerForm extends React.Component {
         </div>
       </div>
     );
+  }
+}
+
+class TimerActionButton extends Component {
+  render() {
+    if (this.props.timerIsRunning) {
+      return (
+        <div
+          className="ui basic red bottom attached button"
+          onClick={this.props.handleStopClick}
+        >
+          Stop
+        </div>
+      );
+    } else {
+      return (
+        <div
+          className="ui basic blue button attached bottom"
+          onClick={this.props.handleStartClick}
+        >
+          Start
+        </div>
+      );
+    }
   }
 }
 
